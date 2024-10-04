@@ -1,25 +1,30 @@
-import React from 'react';
+import React from "react";
 import { useState, useEffect } from "react";
 import "./App.css";
 import ImageForm from "./components/ImageForm";
 import ImageDisplay from "./components/ImageDisplay";
 import ImageHistory from "./components/ImageHistory";
 import ApiKeyManager from "./components/ApiKeyManager";
-import { configureFal } from "./api";
+import { configureFal } from "../api/fal_ai";
+import {MODELS} from "./constants";
 
 function App() {
   const [apiKey, setApiKey] = useState("");
   const [generationResult, setGenerationResult] = useState(null);
   const [status, setStatus] = useState("idle");
+
   const [imageHistory, setImageHistory] = useState(() => {
     const storedHistory = JSON.parse(
       localStorage.getItem("imageHistory") || "[]"
     );
     return storedHistory;
   });
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [showApiKeyManager, setShowApiKeyManager] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("flux-pro/v1.1");
+
+  const first_model_name = Object.keys(MODELS)[0];
+  const [selectedModel, setSelectedModel] = useState(first_model_name);
 
   useEffect(() => {
     const storedApiKey = localStorage.getItem("apiKey");
@@ -38,14 +43,18 @@ function App() {
     setSelectedImage(null);
     console.log("Generation result:", result);
 
-    if (result && result.images && result.images.length > 0) {
+    if (result && result.output.images && result.output.images.length > 0) {
       setImageHistory((prevHistory) => {
         const updatedHistory = [result, ...prevHistory]
-          .filter(
-            (item, index, self) =>
-              index === self.findIndex((t) => t.images && t.images[0] && t.images[0].url === item.images[0].url)
+        // remove duplicates
+       .filter((item, index, self) =>
+          index ===
+          self.findIndex(
+            (t) =>
+              t.output.images[0].url === item.output.images[0].url
           )
-          .slice(0, 50);
+        );
+
         localStorage.setItem("imageHistory", JSON.stringify(updatedHistory));
         return updatedHistory;
       });
@@ -68,7 +77,10 @@ function App() {
       localStorage.setItem("imageHistory", JSON.stringify(updatedHistory));
       return updatedHistory;
     });
-    if (selectedImage && selectedImage.images[0].url === imageToDelete.images[0].url) {
+    if (
+      selectedImage &&
+      selectedImage.images[0].url === imageToDelete.images[0].url
+    ) {
       setSelectedImage(null);
     }
   };

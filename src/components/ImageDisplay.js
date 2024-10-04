@@ -81,8 +81,6 @@ function ImageDisplay({ generationResult, status, selectedImage, onDeleteImage }
       });
   };
 
-  // ... (keep all the existing functions like toggleMaximize, handleZoom, etc.)
-
   const renderStatus = () => {
     switch (status) {
       case "noApiKey":
@@ -102,7 +100,7 @@ function ImageDisplay({ generationResult, status, selectedImage, onDeleteImage }
     </div>
   );
 
-  const imagesToDisplay = selectedImage ? [selectedImage] : (generationResult?.images || []);
+  const imagesToDisplay = selectedImage ? selectedImage.output.images : (generationResult?.output.images || []);
 
   return (
     <div className="image-display-container">

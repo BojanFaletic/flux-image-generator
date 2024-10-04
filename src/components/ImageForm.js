@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { submitInferenceRequest, configureFal } from "../api";
+import { submitInferenceRequest, configureFal } from "../../api/fal_ai";
+import { MODELS } from "../constants";
 
 function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModelChange }) {
   const IMAGE_SIZES = {
@@ -12,11 +13,6 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
     "Landscape 16:9": "1024x576",
     "Custom": "custom"
   };
-
-  const MODELS = [
-    "flux-pro/v1.1",
-    "flux-pro"
-  ];
 
   const [selectedSize, setSelectedSize] = useState("Default");
   const [customResolution, setCustomResolution] = useState("");
@@ -84,20 +80,23 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
         requestData.numInferenceSteps,
         requestData.enableSafetyChecker,
         requestData.seed,
-        selectedModel === "flux-pro" ? "fal-ai/flux-pro" : "fal-ai/flux-pro/v1.1"
+        MODELS[selectedModel]
       );
 
       console.log("Inference request result:", result);
-      
+
       const completeImageData = {
-        ...result,
-        requestData: {
-          ...requestData,
-          model: selectedModel === "flux-pro" ? "fal-ai/flux-pro" : "fal-ai/flux-pro/v1.1"
+        output: {
+          ...result
         },
-        timestamp: new Date().toISOString()
+
+        input: {
+          ...requestData,
+          model: selectedModel,
+          timestamp: new Date().toISOString()
+        },
       };
-      
+
       onSubmit(completeImageData);
 
       console.log("Inference request submitted successfully.");
@@ -127,6 +126,7 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
             value={localNumInferenceSteps}
             onChange={(e) => setLocalNumInferenceSteps(parseInt(e.target.value))}
             min="1"
+            max="100"
           />
         </label>
         <label>
@@ -146,6 +146,7 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
             onChange={(e) => setLocalGuidanceScale(parseFloat(e.target.value))}
             step="0.1"
             min="0"
+            max="10"
           />
         </label>
         <label>
@@ -155,6 +156,7 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
             value={localNumImages}
             onChange={(e) => setLocalNumImages(parseInt(e.target.value))}
             min="1"
+            max="1"
           />
         </label>
       </div>
@@ -189,7 +191,7 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
         <label>
           Model:
           <div className="model-buttons">
-            {MODELS.map((model) => (
+            {Object.keys(MODELS).map((model) => (
               <button
                 key={model}
                 className={`model-button ${selectedModel === model ? 'selected' : ''}`}

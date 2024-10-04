@@ -1,5 +1,5 @@
 import React from "react";
-import { configureFal } from "../api";
+import { configureFal } from "../../api/fal_ai";
 
 function ApiKeyManager({ apiKey, setApiKey }) {
   const handleApiKeyChange = (event) => {

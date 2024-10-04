@@ -17,6 +17,9 @@ function ImageHistory({ onSelectImage, imageHistory }) {
               <p className="history-item-timestamp">{new Date(imageData.timestamp).toLocaleString()}</p>
               <p className="history-item-model">Model: {imageData.requestData.model}</p>
               <p className="history-item-size">Size: {imageData.requestData.imageSize.width}x{imageData.requestData.imageSize.height}</p>
+              <p className="history-item-steps">Steps: {imageData.requestData.numInferenceSteps}</p>
+              <p className="history-item-guidance">Guidance: {imageData.requestData.guidanceScale}</p>
+              <p className="history-item-seed">Seed: {imageData.requestData.seed || 'Random'}</p>
             </div>
           </div>
         ))}

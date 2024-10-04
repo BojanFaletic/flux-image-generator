@@ -39,18 +39,11 @@ function App() {
     console.log("Generation result:", result);
 
     if (result && result.images) {
-      const newImages = result.images.map((image) => ({
-        url: image.url,
-        prompt: result.input?.prompt || "No prompt available",
-        timestamp: new Date().toISOString(),
-        model: selectedModel,
-      }));
-
       setImageHistory((prevHistory) => {
-        const updatedHistory = [...newImages, ...prevHistory]
+        const updatedHistory = [result, ...prevHistory]
           .filter(
-            (image, index, self) =>
-              index === self.findIndex((t) => t.url === image.url)
+            (item, index, self) =>
+              index === self.findIndex((t) => t.images[0].url === item.images[0].url)
           )
           .slice(0, 50);
         localStorage.setItem("imageHistory", JSON.stringify(updatedHistory));
@@ -70,12 +63,12 @@ function App() {
   const handleDeleteImage = (imageToDelete) => {
     setImageHistory((prevHistory) => {
       const updatedHistory = prevHistory.filter(
-        (image) => image.url !== imageToDelete.url
+        (item) => item.images[0].url !== imageToDelete.images[0].url
       );
       localStorage.setItem("imageHistory", JSON.stringify(updatedHistory));
       return updatedHistory;
     });
-    if (selectedImage && selectedImage.url === imageToDelete.url) {
+    if (selectedImage && selectedImage.images[0].url === imageToDelete.images[0].url) {
       setSelectedImage(null);
     }
   };

@@ -382,7 +382,8 @@ body {
 }
 
 .image-history-item {
-  flex: 0 0 auto;
+  max-width: 151px;  /* Approximately 4cm at 96 DPI */
+  max-height: 151px;
   width: 151px;  /* Approximately 4cm at 96 DPI */
   height: 151px;
   border-radius: 8px;

@@ -38,21 +38,33 @@ function ImageDisplay({ generationResult, status, selectedImage, onDeleteImage }
     setIsDragging(false);
   }, []);
 
+  const handleWheel = useCallback((e) => {
+    if (isMaximized) {
+      e.preventDefault();
+      const delta = e.deltaY * -0.01;
+      setScale(prevScale => Math.min(Math.max(prevScale + delta, 0.1), 5));
+    }
+  }, [isMaximized]);
+
   useEffect(() => {
     if (isMaximized) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('wheel', handleWheel, { passive: false });
     }
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('wheel', handleWheel);
     };
-  }, [isMaximized, handleMouseMove, handleMouseUp]);
+  }, [isMaximized, handleMouseMove, handleMouseUp, handleWheel]);
 
   const handleImageClick = (e) => {
     e.stopPropagation();
     if (!isMaximized) {
       setIsMaximized(true);
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
     }
   };
 
@@ -114,7 +126,7 @@ function ImageDisplay({ generationResult, status, selectedImage, onDeleteImage }
                   style={{
                     transform: `scale(${scale})`,
                     transition: "transform 0.3s ease",
-                    transformOrigin: "0 0",
+                    transformOrigin: "center",
                     position: "relative",
                     left: `${position.x}px`,
                     top: `${position.y}px`,

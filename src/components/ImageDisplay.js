@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import './ImageDisplay.css';
-import './ImageHistory.css';
 
 function ImageDisplay({ generationResult, status, selectedImage, onDeleteImage }) {
   const prompt = generationResult?.input?.prompt || selectedImage?.prompt || "generated_image";

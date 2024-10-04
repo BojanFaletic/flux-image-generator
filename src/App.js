@@ -38,12 +38,12 @@ function App() {
     setSelectedImage(null);
     console.log("Generation result:", result);
 
-    if (result && result.images) {
+    if (result && result.images && result.images.length > 0) {
       setImageHistory((prevHistory) => {
         const updatedHistory = [result, ...prevHistory]
           .filter(
             (item, index, self) =>
-              index === self.findIndex((t) => t.images[0].url === item.images[0].url)
+              index === self.findIndex((t) => t.images && t.images[0] && t.images[0].url === item.images[0].url)
           )
           .slice(0, 50);
         localStorage.setItem("imageHistory", JSON.stringify(updatedHistory));

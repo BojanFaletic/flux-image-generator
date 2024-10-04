@@ -88,7 +88,17 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
       );
 
       console.log("Inference request result:", result);
-      onSubmit(result);
+      
+      const completeImageData = {
+        ...result,
+        requestData: {
+          ...requestData,
+          model: selectedModel === "flux-pro" ? "fal-ai/flux-pro" : "fal-ai/flux-pro/v1.1"
+        },
+        timestamp: new Date().toISOString()
+      };
+      
+      onSubmit(completeImageData);
 
       console.log("Inference request submitted successfully.");
 

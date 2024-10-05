@@ -6,7 +6,7 @@ import ImageDisplay from "./components/ImageDisplay";
 import ImageHistory from "./components/ImageHistory";
 import ApiKeyManager from "./components/ApiKeyManager";
 import { configureFal } from "../api/fal_ai";
-import {MODELS} from "./constants";
+import { MODELS } from "./constants";
 
 function App() {
   const [apiKey, setApiKey] = useState("");
@@ -46,14 +46,14 @@ function App() {
     if (result && result.output.images && result.output.images.length > 0) {
       setImageHistory((prevHistory) => {
         const updatedHistory = [result, ...prevHistory]
-        // remove duplicates
-       .filter((item, index, self) =>
-          index ===
-          self.findIndex(
-            (t) =>
-              t.output.images[0].url === item.output.images[0].url
-          )
-        );
+          // remove duplicates
+          .filter(
+            (item, index, self) =>
+              index ===
+              self.findIndex(
+                (t) => t.output.images[0].url === item.output.images[0].url
+              )
+          );
 
         localStorage.setItem("imageHistory", JSON.stringify(updatedHistory));
         return updatedHistory;
@@ -91,12 +91,14 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>FLUX 1.x [pro]</h1>
-        <button onClick={toggleApiKeyManager} className="api-key-toggle">
-          {showApiKeyManager ? "Hide API Key" : "Show API Key"}
-        </button>
-      </header>
+      <div className="app-header">
+        <h2> FLUX 1.x [pro] </h2>
+        <p>
+          <button onClick={toggleApiKeyManager} className="api-key-toggle">
+            {showApiKeyManager ? "Hide API Key" : "Show API Key"}
+          </button>
+        </p>
+      </div>
       {showApiKeyManager && (
         <ApiKeyManager apiKey={apiKey} setApiKey={setApiKey} />
       )}

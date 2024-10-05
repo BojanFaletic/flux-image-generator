@@ -202,7 +202,6 @@ function ImageForm({ onSubmit, apiKey, onGenerationStart, selectedModel, onModel
             ))}
           </div>
         </label>
-        <p>Cost: $0.04 per megapixel</p>
       </div>
     </div>
   );

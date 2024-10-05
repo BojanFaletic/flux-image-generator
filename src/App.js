@@ -72,14 +72,14 @@ function App() {
   const handleDeleteImage = (imageToDelete) => {
     setImageHistory((prevHistory) => {
       const updatedHistory = prevHistory.filter(
-        (item) => item.images[0].url !== imageToDelete.images[0].url
+        (item) => item.output.images[0].url !== imageToDelete.url
       );
       localStorage.setItem("imageHistory", JSON.stringify(updatedHistory));
       return updatedHistory;
     });
     if (
       selectedImage &&
-      selectedImage.images[0].url === imageToDelete.images[0].url
+      selectedImage.output.images[0].url === imageToDelete.url
     ) {
       setSelectedImage(null);
     }
